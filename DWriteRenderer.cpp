@@ -164,7 +164,7 @@ DWriteRenderer::DrawCairoText (IDWriteBitmapRenderTarget *renderTarget)
     cairo_font_face_t *face;
     face = cairo_dwrite_font_face_create_for_dwrite_fontface(dwriteface);
 
-#if 0
+#if 1
     cairo_dwrite_font_face_set_measuring_mode(face, measuringMode_);
     cairo_dwrite_font_face_set_rendering_params(face, renderingParams_);
 #endif
