@@ -11,6 +11,9 @@
 #include "RenderTest.h"
 #include "TextHelpers.h"
 #include "DWriteRenderer.h"
+#include <cairo.h>
+#include <cairo-win32.h>
+#include <vector>
 
 namespace
 {
@@ -109,6 +112,106 @@ void DWriteRenderer::SetMonitor(HMONITOR monitor)
     g_dwriteFactory->CreateMonitorRenderingParams(monitor, &renderingParams_);
 }
 
+std::string createUTF8String(const wchar_t* src, size_t srcLength)
+{
+    int length = WideCharToMultiByte(CP_UTF8, 0, src, srcLength, 0, 0, nullptr, nullptr);
+    std::vector<char> buffer(length);
+    size_t actualLength = WideCharToMultiByte(CP_UTF8, 0, src, srcLength, buffer.data(), length, nullptr, nullptr);
+    return { buffer.data(), actualLength };
+}
+
+cairo_matrix_t toCairoMatrix(DWRITE_MATRIX d)
+{
+    return { d.m11, d.m12, d.m21, d.m22, d.dx, d.dy };
+}
+
+void
+DWriteRenderer::DrawCairoText (IDWriteBitmapRenderTarget *renderTarget)
+{
+    DWRITE_MATRIX transform;
+    renderTarget->GetCurrentTransform(&transform);
+    HDC hdc = renderTarget->GetMemoryDC();
+
+    auto surface = cairo_win32_surface_create(hdc);
+    auto cr = cairo_create (surface);
+
+    int PAD = 10;
+    cairo_text_extents_t extents;
+    cairo_font_extents_t font_extents;
+
+    UINT32 len = textFormat_->GetFontFamilyNameLength();
+    std::vector<wchar_t> family_name(len+1);
+    textFormat_->GetFontFamilyName(family_name.data(), len+1);
+
+    IDWriteFontCollection *systemCollection;
+    g_dwriteFactory->GetSystemFontCollection(&systemCollection);
+
+    UINT32 idx;
+    BOOL found;
+    systemCollection->FindFamilyName(family_name.data(), &idx, &found);
+
+    IDWriteFontFamily *family;
+    systemCollection->GetFontFamily(idx, &family);
+
+    IDWriteFont *dwritefont;
+    DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_NORMAL;
+    DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
+    family->GetFirstMatchingFont(weight, DWRITE_FONT_STRETCH_NORMAL, style, &dwritefont);
+
+    IDWriteFontFace *dwriteface;
+    dwritefont->CreateFontFace(&dwriteface);
+
+    cairo_font_face_t *face;
+    face = cairo_dwrite_font_face_create_for_dwrite_fontface(dwriteface);
+
+#if 0
+    cairo_dwrite_font_face_set_measuring_mode(face, measuringMode_);
+    cairo_dwrite_font_face_set_rendering_params(face, renderingParams_);
+#endif
+    
+    cairo_set_font_face(cr, face);
+
+    double y = 0;
+
+    auto matrix = toCairoMatrix(transform);
+    cairo_set_matrix(cr, &matrix);
+    cairo_set_font_size (cr, textFormat_->GetFontSize());
+
+    auto str = createUTF8String(text_, lstrlen(text_));
+    cairo_text_extents (cr, str.c_str(), &extents);
+    cairo_translate (cr,
+		     PAD - extents.x_bearing,
+		     PAD - extents.y_bearing + y);
+
+#if 0
+    cairo_font_extents (cr, &font_extents);
+    cairo_rectangle (cr, 0, -font_extents.ascent,
+		     extents.x_advance, font_extents.height);
+    cairo_move_to (cr, -PAD, 0);
+    cairo_line_to (cr, extents.width + PAD, 0);
+    cairo_set_source_rgba (cr, 1, 0, 0, .7);
+    cairo_stroke (cr);
+
+    cairo_rectangle (cr,
+		     extents.x_bearing, extents.y_bearing,
+		     extents.width, extents.height);
+    cairo_set_source_rgba (cr, 0.5, 1, 0, .7);
+    cairo_stroke (cr);
+#endif
+    
+    cairo_move_to (cr, 0, 0);
+    cairo_set_source_rgb (cr, 0, 0, 0);
+    cairo_show_text (cr, str.c_str());
+    cairo_fill (cr);
+
+    SafeRelease(&family);
+    SafeRelease(&dwritefont);
+    SafeRelease(&dwriteface);
+
+    cairo_destroy (cr);
+    cairo_surface_destroy (surface);
+}
+
 HRESULT DWriteRenderer::Draw(HDC hdc)
 {
     HRESULT hr = S_OK;
@@ -162,14 +265,8 @@ HRESULT DWriteRenderer::Draw(HDC hdc)
 
     if (SUCCEEDED(hr))
     {
-        // Render the text. The Draw method will call back to the IDWriteTextRenderer
-        // methods implemented by this class.
-        hr = textLayout_->Draw(
-            NULL,           // optional client drawing context
-            this,           // renderer callback
-            textOriginX_,
-            textOriginY_
-            );
+	DrawCairoText(renderTarget_);
+	DrawCairoText(magnifierTarget_);
     }
 
     if (SUCCEEDED(hr))

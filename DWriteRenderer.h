@@ -103,6 +103,7 @@ private:
 
 private:
     HRESULT PrepareMagnifier(HDC hdc);
+    void DrawCairoText(IDWriteBitmapRenderTarget*);
     void DrawMagnifier();
     void SubpixelZoom();
 
