@@ -12,6 +12,7 @@
 #include "TextHelpers.h"
 #include "DWriteRenderer.h"
 #include <cairo.h>
+#include <cairo-dwrite.h>
 #include <cairo-win32.h>
 #include <vector>
 
