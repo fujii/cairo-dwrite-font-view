@@ -1,5 +1,7 @@
 project('cairo-dwrite-font-view', 'cpp',
-    version: '0.1')
+    version: '0.1',
+    default_options: ['cpp_std=c++20']
+)
 
 cairo_dep = dependency('cairo-win32-dwrite-font')
 
@@ -8,8 +10,10 @@ res_dep = windows.compile_resources('RenderTest.rc')
 
 add_project_arguments('-DUNICODE', language: ['cpp'])
 
-executable('cairo-dwrite-font-view',
-    ['Common.h',
+executable('cairo-dwrite-font-view', [
+    'CairoDWriteRenderer.cpp',
+    'CairoDWriteRenderer.h',
+    'Common.h',
     'DWriteRenderer.h',
     'D2DRenderer.cpp',
     'IRenderer.h',

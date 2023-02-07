@@ -861,7 +861,8 @@ HRESULT CreateRenderer(HWND hwnd)
     }
     else
     {
-        g_renderer = CreateDWriteRenderer(
+        //g_renderer = CreateDWriteRenderer(
+        g_renderer = CreateCairoDWriteRenderer(
             hwnd,
             clientRect.right,
             clientRect.bottom,

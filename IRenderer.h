@@ -47,6 +47,14 @@ struct MagnifierInfo
     SIZE  magnifierSize;
 };
 
+IRenderer* CreateCairoDWriteRenderer(
+    HWND hwnd,
+    UINT width,
+    UINT height,
+    IDWriteTextFormat* textFormat,
+    wchar_t const* text
+    );
+
 IRenderer* CreateD2DRenderer(
     HWND hwnd,
     UINT width,
