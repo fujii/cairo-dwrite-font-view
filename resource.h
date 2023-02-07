@@ -15,6 +15,7 @@
 #define IDS_USING_D2D                   107
 #define IDS_USING_DWRITE                108
 #define IDC_DWRITERENDERTEST            109
+#define IDS_USING_CAIRO_DWRITE          110
 #define IDR_ACCELERATOR                 129
 #define ID_EDIT_FONT                    32771
 #define ID_VIEW_SHOWMAGNIFIER           32777
@@ -25,6 +26,7 @@
 #define ID_OPTIONS_GDINATURALMODE       32785
 #define ID_OPTIONS_USEDIRECT2D          32786
 #define ID_OPTIONS_USEDIRECTWRITE       32787
+#define ID_OPTIONS_USECAIRODWRITE       32788
 #define ID_EDIT_COPY                    0xE122
 #define ID_EDIT_PASTE                   0xE125
 #define ID_EDIT_INCREASETEXTSIZE        32801

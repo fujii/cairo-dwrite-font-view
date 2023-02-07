@@ -59,10 +59,11 @@ namespace
     // Current renderer.
     enum RendererID
     {
+        RendererCairoDWrite,
         RendererDWrite,
         RendererD2D
     };
-    RendererID g_rendererID = RendererDWrite;
+    RendererID g_rendererID = RendererCairoDWrite;
     IRenderer* g_renderer = NULL;
 
     // Current magnifier state.
@@ -399,6 +400,10 @@ void InitializeMenuItems(HMENU popupMenu)
             check = (g_measuringMode == DWRITE_MEASURING_MODE_GDI_NATURAL);
             break;
 
+        case ID_OPTIONS_USECAIRODWRITE:
+            check = (g_rendererID == RendererCairoDWrite);
+            break;
+
         case ID_OPTIONS_USEDIRECT2D:
             check = (g_rendererID == RendererD2D);
             break;
@@ -520,6 +525,10 @@ bool OnCommand(HWND hwnd, WORD commandID)
 
     case ID_OPTIONS_GDINATURALMODE:
         SetMeasuringMode(hwnd, DWRITE_MEASURING_MODE_GDI_NATURAL);
+        break;
+
+    case ID_OPTIONS_USECAIRODWRITE:
+        SetRenderer(hwnd, RendererCairoDWrite);
         break;
 
     case ID_OPTIONS_USEDIRECT2D:
@@ -849,8 +858,9 @@ HRESULT CreateRenderer(HWND hwnd)
 
     delete g_renderer; g_renderer = NULL;
 
-    if (g_rendererID == RendererD2D)
+    switch (g_rendererID)
     {
+    case RendererD2D:
         g_renderer = CreateD2DRenderer(
             hwnd,
             clientRect.right,
@@ -858,10 +868,19 @@ HRESULT CreateRenderer(HWND hwnd)
             g_textFormat,
             g_text.c_str()
             );
-    }
-    else
-    {
-        //g_renderer = CreateDWriteRenderer(
+	break;
+
+    case RendererDWrite:
+        g_renderer = CreateDWriteRenderer(
+            hwnd,
+            clientRect.right,
+            clientRect.bottom,
+            g_textFormat,
+            g_text.c_str()
+            );
+	break;
+
+    case RendererCairoDWrite:
         g_renderer = CreateCairoDWriteRenderer(
             hwnd,
             clientRect.right,
@@ -1051,6 +1070,10 @@ void SetCaption(HWND hwnd)
     // Append a string representing the renderer implementation.
     switch (g_rendererID)
     {
+    case RendererCairoDWrite:
+        SafeAppend(caption, bufferSize, &length, IDS_USING_CAIRO_DWRITE);
+        break;
+
     case RendererD2D:
         SafeAppend(caption, bufferSize, &length, IDS_USING_D2D);
         break;
