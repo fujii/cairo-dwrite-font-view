@@ -91,3 +91,5 @@ BEGIN
     IDS_USING_D2D           "Rendering to Direct2D Surface"
     IDS_USING_DWRITE        "Rendering to DIB"
 END
+
+IDR_RT_MANIFEST1        RT_MANIFEST     "RenderTest.manifest"

@@ -128,6 +128,8 @@ CairoDWriteRenderer::DrawCairoText(IDWriteBitmapRenderTarget *renderTarget)
     auto surface = cairo_win32_surface_create(hdc);
     auto cr = cairo_create (surface);
 
+    cairo_surface_set_device_scale (surface, g_dpiX / 96.0f, g_dpiY / 96.0f);
+
     int PAD = 10;
     cairo_text_extents_t extents;
     cairo_font_extents_t font_extents;

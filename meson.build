@@ -6,7 +6,11 @@ project('cairo-dwrite-font-view', 'cpp',
 cairo_dep = dependency('cairo-win32-dwrite-font')
 
 windows = import('windows')
-res_dep = windows.compile_resources('RenderTest.rc')
+res_dep = windows.compile_resources(
+    'RenderTest.rc',
+    depend_files: [
+        'RenderTest.manifest'
+    ])
 
 add_project_arguments('-DUNICODE', language: ['cpp'])
 
