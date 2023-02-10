@@ -138,6 +138,7 @@ CairoDWriteRenderer::DrawCairoText(IDWriteBitmapRenderTarget *renderTarget)
     std::vector<wchar_t> family_name(len+1);
     textFormat_->GetFontFamilyName(family_name.data(), len+1);
 
+#if 1
     IDWriteFontCollection *systemCollection;
     g_dwriteFactory->GetSystemFontCollection(&systemCollection);
 
@@ -159,8 +160,19 @@ CairoDWriteRenderer::DrawCairoText(IDWriteBitmapRenderTarget *renderTarget)
     cairo_font_face_t *face;
     face = cairo_dwrite_font_face_create_for_dwrite_fontface(dwriteface);
 
+    SafeRelease(&family);
+    SafeRelease(&dwritefont);
+    SafeRelease(&dwriteface);
+
     cairo_dwrite_font_face_set_measuring_mode(face, measuringMode_);
     cairo_dwrite_font_face_set_rendering_params(face, renderingParams_);
+#else
+    LOGFONTW log_font = { };
+    log_font.lfWeight = FW_REGULAR;
+    wcscpy(log_font.lfFaceName, family_name.data());
+    cairo_font_face_t *face;
+    face = cairo_win32_font_face_create_for_logfontw(&log_font);
+#endif
     
     cairo_set_font_face(cr, face);
 
@@ -196,10 +208,6 @@ CairoDWriteRenderer::DrawCairoText(IDWriteBitmapRenderTarget *renderTarget)
     cairo_set_source_rgb (cr, 0, 0, 0);
     cairo_show_text (cr, str.c_str());
     cairo_fill (cr);
-
-    SafeRelease(&family);
-    SafeRelease(&dwritefont);
-    SafeRelease(&dwriteface);
 
     cairo_destroy (cr);
     cairo_surface_destroy (surface);
