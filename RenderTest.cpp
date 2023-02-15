@@ -24,6 +24,8 @@ int g_dpiY;
 float const g_formatWidth = 6.0f * 96;
 BOOL g_useARGB32 = FALSE;
 BOOL g_useWin32Font = FALSE;
+BOOL g_showExtents = FALSE;
+
 
 IDWriteFactory* g_dwriteFactory = NULL;
 ID2D1Factory*   g_d2dFactory    = NULL;
@@ -421,6 +423,10 @@ void InitializeMenuItems(HMENU popupMenu)
         case ID_OPTIONS_USEWIN32FONT:
             check = g_useWin32Font;
             break;
+
+        case ID_OPTIONS_SHOWEXTENTS:
+            check = g_showExtents;
+            break;
         }
 
         UINT newState = 
@@ -556,6 +562,11 @@ bool OnCommand(HWND hwnd, WORD commandID)
 
     case ID_OPTIONS_USEWIN32FONT:
 	g_useWin32Font = !g_useWin32Font;
+	InvalidateRect(hwnd, NULL, TRUE);
+        break;
+
+    case ID_OPTIONS_SHOWEXTENTS:
+	g_showExtents = !g_showExtents;
 	InvalidateRect(hwnd, NULL, TRUE);
         break;
 

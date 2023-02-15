@@ -188,21 +188,21 @@ CairoDWriteRenderer::DrawCairoText(IDWriteBitmapRenderTarget *renderTarget)
 		     PAD - extents.x_bearing,
 		     PAD - extents.y_bearing + y);
 
-#if 0
-    cairo_font_extents (cr, &font_extents);
-    cairo_rectangle (cr, 0, -font_extents.ascent,
-		     extents.x_advance, font_extents.height);
-    cairo_move_to (cr, -PAD, 0);
-    cairo_line_to (cr, extents.width + PAD, 0);
-    cairo_set_source_rgba (cr, 1, 0, 0, .7);
-    cairo_stroke (cr);
+    if (g_showExtents) {
+	cairo_font_extents (cr, &font_extents);
+	cairo_rectangle (cr, 0, -font_extents.ascent,
+			 extents.x_advance, font_extents.height);
+	cairo_move_to (cr, -PAD, 0);
+	cairo_line_to (cr, extents.width + PAD, 0);
+	cairo_set_source_rgba (cr, 0, 0, 1, .7);
+	cairo_stroke (cr);
 
-    cairo_rectangle (cr,
-		     extents.x_bearing, extents.y_bearing,
-		     extents.width, extents.height);
-    cairo_set_source_rgba (cr, 0.5, 1, 0, .7);
-    cairo_stroke (cr);
-#endif
+	cairo_rectangle (cr,
+			 extents.x_bearing, extents.y_bearing,
+			 extents.width, extents.height);
+	cairo_set_source_rgba (cr, 0.5, 1, 0, .7);
+	cairo_stroke (cr);
+    }
     
     cairo_move_to (cr, 0, 0);
     cairo_set_source_rgb (cr, 0, 0, 0);
