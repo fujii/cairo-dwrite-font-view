@@ -55,6 +55,7 @@ BEGIN
         MENUITEM "Use CAIRO_FORMAT_ARGB32", ID_OPTIONS_USEARGB32
         MENUITEM "Use cairo Win32 Font", ID_OPTIONS_USEWIN32FONT
         MENUITEM "Show cairo text extents", ID_OPTIONS_SHOWEXTENTS
+        MENUITEM "Use dark mode (only for cairo)", ID_OPTIONS_DARKMODE
     END
 END
 

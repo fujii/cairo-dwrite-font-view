@@ -18,3 +18,4 @@ extern ID2D1Factory* g_d2dFactory;
 extern BOOL g_useARGB32;
 extern BOOL g_useWin32Font;
 extern BOOL g_showExtents;
+extern BOOL g_darkMode;

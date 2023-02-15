@@ -25,6 +25,7 @@ float const g_formatWidth = 6.0f * 96;
 BOOL g_useARGB32 = FALSE;
 BOOL g_useWin32Font = FALSE;
 BOOL g_showExtents = FALSE;
+BOOL g_darkMode = FALSE;
 
 
 IDWriteFactory* g_dwriteFactory = NULL;
@@ -427,6 +428,10 @@ void InitializeMenuItems(HMENU popupMenu)
         case ID_OPTIONS_SHOWEXTENTS:
             check = g_showExtents;
             break;
+
+        case ID_OPTIONS_DARKMODE:
+            check = g_darkMode;
+            break;
         }
 
         UINT newState = 
@@ -567,6 +572,11 @@ bool OnCommand(HWND hwnd, WORD commandID)
 
     case ID_OPTIONS_SHOWEXTENTS:
 	g_showExtents = !g_showExtents;
+	InvalidateRect(hwnd, NULL, TRUE);
+        break;
+
+    case ID_OPTIONS_DARKMODE:
+	g_darkMode = !g_darkMode;
 	InvalidateRect(hwnd, NULL, TRUE);
         break;
 

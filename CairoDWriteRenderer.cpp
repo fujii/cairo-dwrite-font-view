@@ -129,6 +129,11 @@ CairoDWriteRenderer::DrawCairoText(IDWriteBitmapRenderTarget *renderTarget)
     auto surface = cairo_win32_surface_create_with_format(hdc, format);
     auto cr = cairo_create (surface);
 
+    if (g_darkMode) {
+	cairo_set_source_rgb (cr, 0, 0, 0);
+	cairo_paint(cr);
+    }
+
     cairo_surface_set_device_scale (surface, g_dpiX / 96.0f, g_dpiY / 96.0f);
 
     int PAD = 10;
@@ -205,7 +210,10 @@ CairoDWriteRenderer::DrawCairoText(IDWriteBitmapRenderTarget *renderTarget)
     }
     
     cairo_move_to (cr, 0, 0);
-    cairo_set_source_rgb (cr, 0, 0, 0);
+    if (g_darkMode)
+	cairo_set_source_rgb (cr, 1, 1, 1);
+    else
+	cairo_set_source_rgb (cr, 0, 0, 0);
     cairo_show_text (cr, str.c_str());
 
     cairo_destroy (cr);
