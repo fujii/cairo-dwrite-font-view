@@ -125,7 +125,8 @@ CairoDWriteRenderer::DrawCairoText(IDWriteBitmapRenderTarget *renderTarget)
     renderTarget->GetCurrentTransform(&transform);
     HDC hdc = renderTarget->GetMemoryDC();
 
-    auto surface = cairo_win32_surface_create(hdc);
+    cairo_format_t format = g_useARGB32 ? CAIRO_FORMAT_ARGB32 : CAIRO_FORMAT_RGB24;
+    auto surface = cairo_win32_surface_create_with_format(hdc, format);
     auto cr = cairo_create (surface);
 
     cairo_surface_set_device_scale (surface, g_dpiX / 96.0f, g_dpiY / 96.0f);
@@ -207,7 +208,6 @@ CairoDWriteRenderer::DrawCairoText(IDWriteBitmapRenderTarget *renderTarget)
     cairo_move_to (cr, 0, 0);
     cairo_set_source_rgb (cr, 0, 0, 0);
     cairo_show_text (cr, str.c_str());
-    cairo_fill (cr);
 
     cairo_destroy (cr);
     cairo_surface_destroy (surface);

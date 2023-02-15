@@ -22,6 +22,7 @@ HINSTANCE g_instance;
 int g_dpiX;
 int g_dpiY;
 float const g_formatWidth = 6.0f * 96;
+BOOL g_useARGB32 = FALSE;
 
 IDWriteFactory* g_dwriteFactory = NULL;
 ID2D1Factory*   g_d2dFactory    = NULL;
@@ -411,6 +412,10 @@ void InitializeMenuItems(HMENU popupMenu)
         case ID_OPTIONS_USEDIRECTWRITE:
             check = (g_rendererID == RendererDWrite);
             break;
+
+        case ID_OPTIONS_USEARGB32:
+            check = g_useARGB32;
+            break;
         }
 
         UINT newState = 
@@ -537,6 +542,11 @@ bool OnCommand(HWND hwnd, WORD commandID)
 
     case ID_OPTIONS_USEDIRECTWRITE:
         SetRenderer(hwnd, RendererDWrite);
+        break;
+
+    case ID_OPTIONS_USEARGB32:
+	g_useARGB32 = !g_useARGB32;
+	InvalidateRect(hwnd, NULL, TRUE);
         break;
 
     default:

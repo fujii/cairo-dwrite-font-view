@@ -27,6 +27,7 @@
 #define ID_OPTIONS_USEDIRECT2D          32786
 #define ID_OPTIONS_USEDIRECTWRITE       32787
 #define ID_OPTIONS_USECAIRODWRITE       32788
+#define ID_OPTIONS_USEARGB32            32789
 #define ID_EDIT_COPY                    0xE122
 #define ID_EDIT_PASTE                   0xE125
 #define ID_EDIT_INCREASETEXTSIZE        32801
