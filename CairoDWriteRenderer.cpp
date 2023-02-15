@@ -139,41 +139,40 @@ CairoDWriteRenderer::DrawCairoText(IDWriteBitmapRenderTarget *renderTarget)
     std::vector<wchar_t> family_name(len+1);
     textFormat_->GetFontFamilyName(family_name.data(), len+1);
 
-#if 1
-    IDWriteFontCollection *systemCollection;
-    g_dwriteFactory->GetSystemFontCollection(&systemCollection);
-
-    UINT32 idx;
-    BOOL found;
-    systemCollection->FindFamilyName(family_name.data(), &idx, &found);
-
-    IDWriteFontFamily *family;
-    systemCollection->GetFontFamily(idx, &family);
-
-    IDWriteFont *dwritefont;
-    DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_NORMAL;
-    DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
-    family->GetFirstMatchingFont(weight, DWRITE_FONT_STRETCH_NORMAL, style, &dwritefont);
-
-    IDWriteFontFace *dwriteface;
-    dwritefont->CreateFontFace(&dwriteface);
-
     cairo_font_face_t *face;
-    face = cairo_dwrite_font_face_create_for_dwrite_fontface(dwriteface);
+    if (!g_useWin32Font) {
+	IDWriteFontCollection *systemCollection;
+	g_dwriteFactory->GetSystemFontCollection(&systemCollection);
 
-    SafeRelease(&family);
-    SafeRelease(&dwritefont);
-    SafeRelease(&dwriteface);
+	UINT32 idx;
+	BOOL found;
+	systemCollection->FindFamilyName(family_name.data(), &idx, &found);
 
-    cairo_dwrite_font_face_set_measuring_mode(face, measuringMode_);
-    cairo_dwrite_font_face_set_rendering_params(face, renderingParams_);
-#else
-    LOGFONTW log_font = { };
-    log_font.lfWeight = FW_REGULAR;
-    wcscpy(log_font.lfFaceName, family_name.data());
-    cairo_font_face_t *face;
-    face = cairo_win32_font_face_create_for_logfontw(&log_font);
-#endif
+	IDWriteFontFamily *family;
+	systemCollection->GetFontFamily(idx, &family);
+
+	IDWriteFont *dwritefont;
+	DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_NORMAL;
+	DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
+	family->GetFirstMatchingFont(weight, DWRITE_FONT_STRETCH_NORMAL, style, &dwritefont);
+
+	IDWriteFontFace *dwriteface;
+	dwritefont->CreateFontFace(&dwriteface);
+
+	face = cairo_dwrite_font_face_create_for_dwrite_fontface(dwriteface);
+
+	SafeRelease(&family);
+	SafeRelease(&dwritefont);
+	SafeRelease(&dwriteface);
+
+	cairo_dwrite_font_face_set_measuring_mode(face, measuringMode_);
+	cairo_dwrite_font_face_set_rendering_params(face, renderingParams_);
+    } else {
+	LOGFONTW log_font = { };
+	log_font.lfWeight = FW_REGULAR;
+	wcscpy(log_font.lfFaceName, family_name.data());
+	face = cairo_win32_font_face_create_for_logfontw(&log_font);
+    }
     
     cairo_set_font_face(cr, face);
 
