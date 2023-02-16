@@ -11,9 +11,11 @@
 #include "RenderTest.h"
 #include "TextHelpers.h"
 #include "CairoDWriteRenderer.h"
+#include "resource.h"
 #include <cairo.h>
 #include <cairo-dwrite.h>
 #include <cairo-win32.h>
+#include <cassert>
 #include <vector>
 
 namespace
@@ -118,6 +120,34 @@ cairo_matrix_t toCairoMatrix(DWRITE_MATRIX d)
     return { d.m11, d.m12, d.m21, d.m22, d.dx, d.dy };
 }
 
+static cairo_antialias_t getCairoAntialias()
+{
+    switch (g_cairoAntialias) {
+    case ID_CAIRO_ANTIALIAS_DEFAULT: return CAIRO_ANTIALIAS_DEFAULT;
+    case ID_CAIRO_ANTIALIAS_NONE: return CAIRO_ANTIALIAS_NONE;
+    case ID_CAIRO_ANTIALIAS_GRAY: return CAIRO_ANTIALIAS_GRAY;
+    case ID_CAIRO_ANTIALIAS_SUBPIXEL: return CAIRO_ANTIALIAS_SUBPIXEL;
+    case ID_CAIRO_ANTIALIAS_FAST: return CAIRO_ANTIALIAS_FAST;
+    case ID_CAIRO_ANTIALIAS_GOOD: return CAIRO_ANTIALIAS_GOOD;
+    case ID_CAIRO_ANTIALIAS_BEST: return CAIRO_ANTIALIAS_BEST;
+    }
+    assert(false);
+    return CAIRO_ANTIALIAS_DEFAULT;
+}
+
+static cairo_subpixel_order_t getCairoSubpixelOrder()
+{
+    switch (g_cairoSubpixelOrder) {
+    case ID_CAIRO_SUBPIXEL_ORDER_DEFAULT: return CAIRO_SUBPIXEL_ORDER_DEFAULT;
+    case ID_CAIRO_SUBPIXEL_ORDER_RGB: return CAIRO_SUBPIXEL_ORDER_RGB;
+    case ID_CAIRO_SUBPIXEL_ORDER_BGR: return CAIRO_SUBPIXEL_ORDER_BGR;
+    case ID_CAIRO_SUBPIXEL_ORDER_VRGB: return CAIRO_SUBPIXEL_ORDER_VRGB;
+    case ID_CAIRO_SUBPIXEL_ORDER_VBGR: return CAIRO_SUBPIXEL_ORDER_VBGR;
+    }
+    assert(false);
+    return CAIRO_SUBPIXEL_ORDER_DEFAULT;
+}
+
 void
 CairoDWriteRenderer::DrawCairoText(IDWriteBitmapRenderTarget *renderTarget)
 {
@@ -178,8 +208,14 @@ CairoDWriteRenderer::DrawCairoText(IDWriteBitmapRenderTarget *renderTarget)
 	wcscpy(log_font.lfFaceName, family_name.data());
 	face = cairo_win32_font_face_create_for_logfontw(&log_font);
     }
-    
+
     cairo_set_font_face(cr, face);
+
+    auto fontOptions = cairo_font_options_create();
+    cairo_font_options_set_antialias(fontOptions, getCairoAntialias());
+    cairo_font_options_set_subpixel_order(fontOptions, getCairoSubpixelOrder());
+    cairo_set_font_options(cr, fontOptions);
+    cairo_font_options_destroy(fontOptions);
 
     double y = 0;
 

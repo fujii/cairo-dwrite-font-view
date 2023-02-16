@@ -26,6 +26,8 @@ BOOL g_useARGB32 = FALSE;
 BOOL g_useWin32Font = FALSE;
 BOOL g_showExtents = FALSE;
 BOOL g_darkMode = FALSE;
+int g_cairoAntialias = ID_CAIRO_ANTIALIAS_DEFAULT;
+int g_cairoSubpixelOrder = ID_CAIRO_SUBPIXEL_ORDER_DEFAULT;
 
 
 IDWriteFactory* g_dwriteFactory = NULL;
@@ -432,6 +434,27 @@ void InitializeMenuItems(HMENU popupMenu)
         case ID_OPTIONS_DARKMODE:
             check = g_darkMode;
             break;
+
+#define menu_select_item(id, var) \
+        case id: \
+	    check = var == id; \
+	    break; 
+
+        menu_select_item(ID_CAIRO_ANTIALIAS_DEFAULT, g_cairoAntialias);
+        menu_select_item(ID_CAIRO_ANTIALIAS_NONE, g_cairoAntialias);
+        menu_select_item(ID_CAIRO_ANTIALIAS_GRAY, g_cairoAntialias);
+        menu_select_item(ID_CAIRO_ANTIALIAS_SUBPIXEL, g_cairoAntialias);
+        menu_select_item(ID_CAIRO_ANTIALIAS_FAST, g_cairoAntialias);
+        menu_select_item(ID_CAIRO_ANTIALIAS_GOOD, g_cairoAntialias);
+        menu_select_item(ID_CAIRO_ANTIALIAS_BEST, g_cairoAntialias);
+
+        menu_select_item(ID_CAIRO_SUBPIXEL_ORDER_DEFAULT, g_cairoSubpixelOrder);
+        menu_select_item(ID_CAIRO_SUBPIXEL_ORDER_RGB, g_cairoSubpixelOrder);
+        menu_select_item(ID_CAIRO_SUBPIXEL_ORDER_BGR, g_cairoSubpixelOrder);
+        menu_select_item(ID_CAIRO_SUBPIXEL_ORDER_VRGB, g_cairoSubpixelOrder);
+        menu_select_item(ID_CAIRO_SUBPIXEL_ORDER_VBGR, g_cairoSubpixelOrder);
+	
+#undef menu_select_item
         }
 
         UINT newState = 
@@ -579,6 +602,28 @@ bool OnCommand(HWND hwnd, WORD commandID)
 	g_darkMode = !g_darkMode;
 	InvalidateRect(hwnd, NULL, TRUE);
         break;
+
+#define menu_select_item(id, var) \
+    case id: \
+        var = id; \
+        InvalidateRect(hwnd, NULL, TRUE); \
+        break; 
+
+    menu_select_item(ID_CAIRO_ANTIALIAS_DEFAULT, g_cairoAntialias);
+    menu_select_item(ID_CAIRO_ANTIALIAS_NONE, g_cairoAntialias);
+    menu_select_item(ID_CAIRO_ANTIALIAS_GRAY, g_cairoAntialias);
+    menu_select_item(ID_CAIRO_ANTIALIAS_SUBPIXEL, g_cairoAntialias);
+    menu_select_item(ID_CAIRO_ANTIALIAS_FAST, g_cairoAntialias);
+    menu_select_item(ID_CAIRO_ANTIALIAS_GOOD, g_cairoAntialias);
+    menu_select_item(ID_CAIRO_ANTIALIAS_BEST, g_cairoAntialias);
+
+    menu_select_item(ID_CAIRO_SUBPIXEL_ORDER_DEFAULT, g_cairoSubpixelOrder);
+    menu_select_item(ID_CAIRO_SUBPIXEL_ORDER_RGB, g_cairoSubpixelOrder);
+    menu_select_item(ID_CAIRO_SUBPIXEL_ORDER_BGR, g_cairoSubpixelOrder);
+    menu_select_item(ID_CAIRO_SUBPIXEL_ORDER_VRGB, g_cairoSubpixelOrder);
+    menu_select_item(ID_CAIRO_SUBPIXEL_ORDER_VBGR, g_cairoSubpixelOrder);
+
+#undef menu_select_item
 
     default:
         return false;

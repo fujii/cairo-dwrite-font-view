@@ -19,3 +19,5 @@ extern BOOL g_useARGB32;
 extern BOOL g_useWin32Font;
 extern BOOL g_showExtents;
 extern BOOL g_darkMode;
+extern int g_cairoAntialias;
+extern int g_cairoSubpixelOrder;
