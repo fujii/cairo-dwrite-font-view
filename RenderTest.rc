@@ -51,11 +51,13 @@ BEGIN
         MENUITEM "cairo\tCTRL+R",       ID_OPTIONS_USECAIRODWRITE
         MENUITEM "Render to DI&B\tCTRL+B",      ID_OPTIONS_USEDIRECTWRITE
         MENUITEM "Render to &Direct2D Surface\tCTRL+D", ID_OPTIONS_USEDIRECT2D
-        MENUITEM SEPARATOR
+    END
+    POPUP "&Cairo Options"
+    BEGIN
         MENUITEM "Use CAIRO_FORMAT_ARGB32", ID_OPTIONS_USEARGB32
-        MENUITEM "Use cairo Win32 Font", ID_OPTIONS_USEWIN32FONT
-        MENUITEM "Show cairo text extents", ID_OPTIONS_SHOWEXTENTS
-        MENUITEM "Use dark mode (only for cairo)", ID_OPTIONS_DARKMODE
+        MENUITEM "Use Win32 Font", ID_OPTIONS_USEWIN32FONT
+        MENUITEM "Show text extents", ID_OPTIONS_SHOWEXTENTS
+        MENUITEM "Use dark mode", ID_OPTIONS_DARKMODE
     END
 END
 
