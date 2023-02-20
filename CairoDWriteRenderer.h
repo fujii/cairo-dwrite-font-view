@@ -55,8 +55,6 @@ private:
     void DrawMagnifier();
     void SubpixelZoom();
 
-    HRESULT UpdateTextOrigin();
-
     HWND hwnd_;
     UINT width_;
     UINT height_;
@@ -71,8 +69,4 @@ private:
     IDWriteBitmapRenderTarget* magnifierTarget_;
     IDWriteRenderingParams* renderingParams_;
     HPEN borderPen_;
-
-    // Text layout.
-    float textOriginX_;
-    float textOriginY_;
 };

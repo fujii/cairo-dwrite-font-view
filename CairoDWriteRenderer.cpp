@@ -98,8 +98,6 @@ void CairoDWriteRenderer::SetWindowSize(UINT width, UINT height)
     width_ = width;
     height_ = height;
     SafeRelease(&renderTarget_);
-
-    UpdateTextOrigin();
 }
 
 void CairoDWriteRenderer::SetMonitor(HMONITOR monitor)
@@ -217,17 +215,20 @@ CairoDWriteRenderer::DrawCairoText(IDWriteBitmapRenderTarget *renderTarget)
     cairo_set_font_options(cr, fontOptions);
     cairo_font_options_destroy(fontOptions);
 
-    double y = 0;
-
     auto matrix = toCairoMatrix(transform);
     cairo_set_matrix(cr, &matrix);
     cairo_set_font_size (cr, textFormat_->GetFontSize());
 
     auto str = createUTF8String(text_, lstrlen(text_));
     cairo_text_extents (cr, str.c_str(), &extents);
+
+    // Center the text.
+    float textOriginX = (PixelsToDipsX(width_) - extents.width) * 0.5f;
+    float textOriginY = (PixelsToDipsY(height_) - extents.height) * 0.5f;
+
     cairo_translate (cr,
-		     PAD - extents.x_bearing,
-		     PAD - extents.y_bearing + y);
+		     textOriginX - extents.x_bearing,
+		     textOriginY - extents.y_bearing);
 
     if (g_showExtents) {
 	cairo_font_extents (cr, &font_extents);
@@ -563,20 +564,6 @@ void CairoDWriteRenderer::SubpixelZoom()
             }
         }
     }
-}
-
-HRESULT CairoDWriteRenderer::UpdateTextOrigin()
-{
-    HRESULT hr = S_OK;
-
-    // Get the text layout size.
-    DWRITE_TEXT_METRICS metrics = {};
-
-    // Center the text.
-    textOriginX_ = (PixelsToDipsX(width_) - metrics.width) * 0.5f;
-    textOriginY_ = (PixelsToDipsY(height_) - metrics.height) * 0.5f;
-
-    return hr;
 }
 
 //
