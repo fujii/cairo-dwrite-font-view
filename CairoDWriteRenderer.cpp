@@ -113,9 +113,22 @@ std::string createUTF8String(const wchar_t* src, size_t srcLength)
     return { buffer.data(), actualLength };
 }
 
-cairo_matrix_t toCairoMatrix(DWRITE_MATRIX d)
+static cairo_matrix_t toCairoMatrix(DWRITE_MATRIX d)
 {
     return { d.m11, d.m12, d.m21, d.m22, d.dx, d.dy };
+}
+
+static cairo_matrix_t getCTM(DWRITE_MATRIX d, float clientX, float clientY)
+{
+    cairo_matrix_t ctm = toCairoMatrix(d);
+    double scales[] = { 1, 2, -1, -2 };
+    double scaleX, scaleY;
+    scaleX = scales[g_scaleX - ID_OPTIONS_X1];
+    scaleY = scales[g_scaleY - ID_OPTIONS_Y1];
+    cairo_matrix_translate(&ctm, clientX / 2, clientY / 2);
+    cairo_matrix_scale(&ctm, scaleX, scaleY);
+    cairo_matrix_translate(&ctm, -clientX / 2, -clientY / 2);
+    return ctm;
 }
 
 static cairo_antialias_t getCairoAntialias()
@@ -215,7 +228,10 @@ CairoDWriteRenderer::DrawCairoText(IDWriteBitmapRenderTarget *renderTarget)
     cairo_set_font_options(cr, fontOptions);
     cairo_font_options_destroy(fontOptions);
 
-    auto matrix = toCairoMatrix(transform);
+    float clientX = PixelsToDipsX(width_);
+    float clientY = PixelsToDipsY(height_);
+
+    auto matrix = getCTM(transform, clientX, clientY);
     cairo_set_matrix(cr, &matrix);
     cairo_set_font_size (cr, textFormat_->GetFontSize());
 
@@ -223,8 +239,8 @@ CairoDWriteRenderer::DrawCairoText(IDWriteBitmapRenderTarget *renderTarget)
     cairo_text_extents (cr, str.c_str(), &extents);
 
     // Center the text.
-    float textOriginX = (PixelsToDipsX(width_) - extents.width) * 0.5f;
-    float textOriginY = (PixelsToDipsY(height_) - extents.height) * 0.5f;
+    float textOriginX = (clientX - extents.width) * 0.5f;
+    float textOriginY = (clientY - extents.height) * 0.5f;
 
     cairo_translate (cr,
 		     textOriginX - extents.x_bearing,

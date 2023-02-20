@@ -31,6 +31,14 @@
 #define ID_OPTIONS_USEWIN32FONT         32790
 #define ID_OPTIONS_SHOWEXTENTS          32791
 #define ID_OPTIONS_DARKMODE             32792
+#define ID_OPTIONS_X1                   32793
+#define ID_OPTIONS_X2                   32794
+#define ID_OPTIONS_XMINUS1              32795
+#define ID_OPTIONS_XMINUS2              32796
+#define ID_OPTIONS_Y1                   32797
+#define ID_OPTIONS_Y2                   32798
+#define ID_OPTIONS_YMINUS1              32799
+#define ID_OPTIONS_YMINUS2              32800
 #define ID_EDIT_COPY                    0xE122
 #define ID_EDIT_PASTE                   0xE125
 #define ID_EDIT_INCREASETEXTSIZE        32801

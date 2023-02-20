@@ -28,6 +28,8 @@ BOOL g_showExtents = FALSE;
 BOOL g_darkMode = FALSE;
 int g_cairoAntialias = ID_CAIRO_ANTIALIAS_DEFAULT;
 int g_cairoSubpixelOrder = ID_CAIRO_SUBPIXEL_ORDER_DEFAULT;
+int g_scaleX = ID_OPTIONS_X1;
+int g_scaleY = ID_OPTIONS_Y1;
 
 
 IDWriteFactory* g_dwriteFactory = NULL;
@@ -440,6 +442,16 @@ void InitializeMenuItems(HMENU popupMenu)
 	    check = var == id; \
 	    break; 
 
+        menu_select_item(ID_OPTIONS_X1, g_scaleX);
+        menu_select_item(ID_OPTIONS_X2, g_scaleX);
+        menu_select_item(ID_OPTIONS_XMINUS1, g_scaleX);
+        menu_select_item(ID_OPTIONS_XMINUS2, g_scaleX);
+
+        menu_select_item(ID_OPTIONS_Y1, g_scaleY);
+        menu_select_item(ID_OPTIONS_Y2, g_scaleY);
+        menu_select_item(ID_OPTIONS_YMINUS1, g_scaleY);
+        menu_select_item(ID_OPTIONS_YMINUS2, g_scaleY);
+
         menu_select_item(ID_CAIRO_ANTIALIAS_DEFAULT, g_cairoAntialias);
         menu_select_item(ID_CAIRO_ANTIALIAS_NONE, g_cairoAntialias);
         menu_select_item(ID_CAIRO_ANTIALIAS_GRAY, g_cairoAntialias);
@@ -608,6 +620,16 @@ bool OnCommand(HWND hwnd, WORD commandID)
         var = id; \
         InvalidateRect(hwnd, NULL, TRUE); \
         break; 
+
+    menu_select_item(ID_OPTIONS_X1, g_scaleX);
+    menu_select_item(ID_OPTIONS_X2, g_scaleX);
+    menu_select_item(ID_OPTIONS_XMINUS1, g_scaleX);
+    menu_select_item(ID_OPTIONS_XMINUS2, g_scaleX);
+
+    menu_select_item(ID_OPTIONS_Y1, g_scaleY);
+    menu_select_item(ID_OPTIONS_Y2, g_scaleY);
+    menu_select_item(ID_OPTIONS_YMINUS1, g_scaleY);
+    menu_select_item(ID_OPTIONS_YMINUS2, g_scaleY);
 
     menu_select_item(ID_CAIRO_ANTIALIAS_DEFAULT, g_cairoAntialias);
     menu_select_item(ID_CAIRO_ANTIALIAS_NONE, g_cairoAntialias);

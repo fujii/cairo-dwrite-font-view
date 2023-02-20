@@ -21,3 +21,5 @@ extern BOOL g_showExtents;
 extern BOOL g_darkMode;
 extern int g_cairoAntialias;
 extern int g_cairoSubpixelOrder;
+extern int g_scaleX;
+extern int g_scaleY;

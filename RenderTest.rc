@@ -72,6 +72,16 @@ BEGIN
         MENUITEM "CAIRO_SUBPIXEL_ORDER_BGR", ID_CAIRO_SUBPIXEL_ORDER_BGR
         MENUITEM "CAIRO_SUBPIXEL_ORDER_VRGB", ID_CAIRO_SUBPIXEL_ORDER_VRGB
         MENUITEM "CAIRO_SUBPIXEL_ORDER_VBGR", ID_CAIRO_SUBPIXEL_ORDER_VBGR
+        MENUITEM SEPARATOR
+        MENUITEM "x = x",                         ID_OPTIONS_X1
+        MENUITEM "x = 2x",                        ID_OPTIONS_X2
+        MENUITEM "x = -x",                        ID_OPTIONS_XMINUS1
+        MENUITEM "x = -2x",                       ID_OPTIONS_XMINUS2
+        MENUITEM SEPARATOR
+        MENUITEM "y = y",                         ID_OPTIONS_Y1
+        MENUITEM "y = 2y",                        ID_OPTIONS_Y2
+        MENUITEM "y = -y",                        ID_OPTIONS_YMINUS1
+        MENUITEM "y = -2y",                       ID_OPTIONS_YMINUS2
     END
 END
 
