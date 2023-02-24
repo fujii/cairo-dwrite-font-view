@@ -13,6 +13,7 @@ res_dep = windows.compile_resources(
     ])
 
 add_project_arguments('-DUNICODE', language: ['cpp'])
+add_project_link_arguments('-municode', language: ['cpp'])
 
 executable('cairo-dwrite-font-view', [
     'CairoDWriteRenderer.cpp',

@@ -62,7 +62,7 @@ private:
     DWRITE_MATRIX transform_;
     MagnifierInfo magnifier_;
     IDWriteTextFormat* textFormat_;
-    __nullterminated wchar_t const* text_;
+    wchar_t const* text_;
 
     // Rendering interfaces.
     IDWriteBitmapRenderTarget* renderTarget_;
