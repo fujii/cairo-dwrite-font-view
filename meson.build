@@ -3,7 +3,7 @@ project('cairo-dwrite-font-view', 'cpp',
     default_options: ['cpp_std=c++20']
 )
 
-cairo_dep = dependency('cairo-win32-dwrite-font')
+cairo_dep = dependency('cairo-dwrite-font')
 
 windows = import('windows')
 res_dep = windows.compile_resources(
