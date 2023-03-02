@@ -23,7 +23,7 @@ int g_dpiX;
 int g_dpiY;
 float const g_formatWidth = 6.0f * 96;
 BOOL g_useARGB32 = FALSE;
-BOOL g_useWin32Font = FALSE;
+BOOL g_useWin32Font = TRUE;
 BOOL g_showExtents = FALSE;
 BOOL g_darkMode = FALSE;
 int g_cairoAntialias = ID_CAIRO_ANTIALIAS_DEFAULT;
@@ -78,7 +78,7 @@ namespace
     // Current magnifier state.
     MagnifierInfo g_magnifier =
     {
-        true,                   // visible
+        false,                  // visible
         MagnifierInfo::Pixel,   // type
         3,                      // scale
         0

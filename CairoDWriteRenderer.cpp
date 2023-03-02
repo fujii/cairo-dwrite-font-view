@@ -215,9 +215,13 @@ CairoDWriteRenderer::DrawCairoText(IDWriteBitmapRenderTarget *renderTarget)
 	cairo_dwrite_font_face_set_rendering_params(face, renderingParams_);
     } else {
 	LOGFONTW log_font = { };
+	log_font.lfHeight = (LONG) -textFormat_->GetFontSize();
 	log_font.lfWeight = FW_REGULAR;
+	log_font.lfQuality = CLEARTYPE_QUALITY;
 	wcscpy(log_font.lfFaceName, family_name.data());
-	face = cairo_win32_font_face_create_for_logfontw(&log_font);
+	HFONT font = CreateFontIndirect(&log_font);
+	face = cairo_win32_font_face_create_for_hfont(font);
+	DeleteObject(font);
     }
 
     cairo_set_font_face(cr, face);
