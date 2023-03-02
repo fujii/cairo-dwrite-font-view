@@ -322,7 +322,8 @@ HRESULT CairoDWriteRenderer::Draw(HDC hdc)
     if (SUCCEEDED(hr))
     {
 	DrawCairoText(renderTarget_);
-	DrawCairoText(magnifierTarget_);
+	if (magnifierTarget_)
+	    DrawCairoText(magnifierTarget_);
     }
 
     if (SUCCEEDED(hr))
