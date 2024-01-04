@@ -1121,7 +1121,7 @@ void OnMouseUp(HWND hwnd)
     }
 }
 
-void SafeAppend(wchar_t* buffer, size_t bufferSize, size_t* length, wchar_t* text)
+void SafeAppend(wchar_t* buffer, size_t bufferSize, size_t* length, const wchar_t* text)
 {
     // Append the new text if it fits into the buffer, and adjust the length.
     // Otherwise leave the buffer alone.
